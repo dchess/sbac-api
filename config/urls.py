@@ -25,5 +25,6 @@ router.register('types', api.views.TypeViewSet)
 
 urlpatterns = [
     url('api/', include(router.urls)),
+    url('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 ]

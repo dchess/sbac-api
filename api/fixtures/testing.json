@@ -1,0 +1,27 @@
+[
+    {
+        "fields": {
+            "description": "State",
+            "type_id": 4
+        },
+        "model": "api.type",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "County",
+            "type_id": 5
+        },
+        "model": "api.type",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "email": "some.user@example.com",
+            "password": "12345",
+            "username": "some_user"
+        },
+        "model": "auth.user",
+        "pk": 1
+    }
+]

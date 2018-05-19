@@ -1,13 +1,13 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters, permissions
+from django_filters.rest_framework import DjangoFilterBackend
 from api.models import Entity, Type
 from api.serializers import EntitySerializer, TypeSerializer
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 
 
 class TypeViewSet(viewsets.ModelViewSet):
     queryset = Type.objects.all()
     serializer_class = TypeSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class EntityViewSet(viewsets.ModelViewSet):
