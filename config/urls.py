@@ -24,6 +24,7 @@ router.register('entities', api.views.EntityViewSet)
 router.register('types', api.views.TypeViewSet)
 router.register('tests', api.views.TestViewSet)
 router.register('grades', api.views.GradeViewSet)
+router.register('subgroups', api.views.SubGroupViewSet)
 
 urlpatterns = [
     url('api/', include(router.urls)),

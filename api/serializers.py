@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Entity, Type, Test, Grade
+from api.models import Entity, Type, Test, Grade, SubGroup
 
 
 class TypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -23,4 +23,10 @@ class TestSerializer(serializers.HyperlinkedModelSerializer):
 class GradeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Grade
+        fields = '__all__'
+
+
+class SubGroupSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = SubGroup
         fields = '__all__'

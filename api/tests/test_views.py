@@ -2,8 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
 from api.views import TypeViewSet, EntityViewSet, TestViewSet, GradeViewSet
-from api.models import Type, Entity, Test, Grade
-
+from api.models import Type, Entity, Test, Grade, SubGroup
 
 class TypeViewSetTest(TestCase):
     fixtures = ['testing']
@@ -351,4 +350,93 @@ class GradeViewSetTest(TestCase):
         response = self.client.delete('/api/grades/{}/'.format(self.grade.id))
         self.assertEqual(response.status_code, 204)
         new_count = Grade.objects.all().count()
+        self.assertEqual(original_count - 1, new_count)
+
+
+class SubGroupViewSetTest(TestCase):
+    fixtures = ['testing']
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.get(username='some_user')
+        self.subgroups = SubGroup.objects.all()
+        self.subgroup = self.subgroups.first()
+
+    def test_get_returns_all(self):
+        response = self.client.get('/api/subgroups/')
+        self.assertEqual(response.status_code, 200)
+        results = response.json()['results']
+        self.assertEqual(len(results), self.subgroups.count())
+
+    def test_get_returns_specified(self):
+        response = self.client.get('/api/subgroups/{}/'.format(self.subgroup.id))
+        self.assertEqual(response.status_code, 200)
+        results = response.json()
+        self.assertEqual(results['description'], self.subgroup.description)
+
+    def test_unauthorized_cannot_post(self):
+        original_count = self.subgroups.count()
+        response = self.client.post(
+            '/api/subgroups/',
+            {'subgroup_id': '999', 'description': 'Fake SubGroup'}
+        )
+        self.assertEqual(response.status_code, 401)
+        new_count = SubGroup.objects.all().count()
+        self.assertEqual(original_count, new_count)
+
+    def test_authorized_can_post(self):
+        self.client.force_authenticate(user=self.user)
+        original_count = self.subgroups.count()
+        response = self.client.post(
+            '/api/subgroups/',
+            {'subgroup_id': '999', 'description': 'Fake SubGroup'}
+        )
+        self.assertEqual(response.status_code, 201)
+        new_count = SubGroup.objects.all().count()
+        self.assertEqual(original_count + 1, new_count)
+
+    def test_unauthorized_cannot_update(self):
+        original_description = self.subgroup.description
+        response = self.client.put(
+            '/api/subgroups/{}/'.format(self.subgroup.id),
+            {
+                'subgroup_id': self.subgroup.subgroup_id,
+                'description': 'Fake SubGroup'
+            }
+        )
+        self.assertEqual(response.status_code, 401)
+        new_description = SubGroup.objects.all().first().description
+        self.assertEqual(original_description, new_description)
+
+    def test_authorized_can_update(self):
+        self.client.force_authenticate(user=self.user)
+        original_description = self.subgroup.description
+        response = self.client.put(
+            '/api/subgroups/{}/'.format(self.subgroup.id),
+            {
+                'subgroup_id': self.subgroup.subgroup_id,
+                'description': 'Fake SubGroup'
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        new_description = SubGroup.objects.all().first().description
+        self.assertNotEqual(original_description, new_description)
+
+    def test_unauthorized_cannot_delete(self):
+        original_count = self.subgroups.count()
+        response = self.client.delete(
+            '/api/subgroups/{}/'.format(self.subgroup.id)
+        )
+        self.assertEqual(response.status_code, 401)
+        new_count = SubGroup.objects.all().count()
+        self.assertEqual(original_count, new_count)
+
+    def test_authorized_can_delete(self):
+        self.client.force_authenticate(user=self.user)
+        original_count = self.subgroups.count()
+        response = self.client.delete(
+            '/api/subgroups/{}/'.format(self.subgroup.id)
+        )
+        self.assertEqual(response.status_code, 204)
+        new_count = SubGroup.objects.all().count()
         self.assertEqual(original_count - 1, new_count)

@@ -79,5 +79,29 @@
         },
         "model": "api.grade",
         "pk": 2
+    },
+    {
+        "fields": {
+            "description": "All Students",
+            "subgroup_id": 1
+        },
+        "model": "api.subgroup",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "Males",
+            "subgroup_id": 3
+        },
+        "model": "api.subgroup",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "description": "Females",
+            "subgroup_id": 4
+        },
+        "model": "api.subgroup",
+        "pk": 3
     }
 ]
