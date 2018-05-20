@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
-from api.models import Entity, Type, Test
+from api.models import Entity, Type, Test, Grade
 
 
 class EntityModelTest(TestCase):
@@ -132,3 +132,25 @@ class TestModelTest(TestCase):
         with self.assertRaises(ValidationError):
             self.test.name = 'a' * 51
             self.test.full_clean()
+
+
+class GradeModelTest(TestCase):
+
+    def setUp(self):
+        self.grade = Grade.objects.create(
+            num = "03",
+            description = "3rd Grade"
+        )
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.grade), '3rd Grade')
+
+    def test_num_max_length(self):
+        with self.assertRaises(ValidationError):
+            self.grade.num = '0' * 3
+            self.grade.full_clean()
+
+    def test_description_max_length(self):
+        with self.assertRaises(ValidationError):
+            self.grade.description = 'a' * 11
+            self.grade.full_clean()

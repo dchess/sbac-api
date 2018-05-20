@@ -44,3 +44,11 @@ class Test(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Grade(models.Model):
+    num = models.CharField(max_length=2)
+    description = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.description
