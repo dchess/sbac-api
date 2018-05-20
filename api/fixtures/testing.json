@@ -1,0 +1,51 @@
+[
+    {
+        "fields": {
+            "description": "State",
+            "type_id": 4
+        },
+        "model": "api.type",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "County",
+            "type_id": 5
+        },
+        "model": "api.type",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "email": "some.user@example.com",
+            "password": "12345",
+            "username": "some_user"
+        },
+        "model": "auth.user",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "county_code": "0000000",
+            "county_name": "State of California",
+            "district_code": "00000",
+            "entity_type": 4,
+            "school_code": "00",
+            "test_year": 2016
+        },
+        "model": "api.entity",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "county_code": "0000000",
+            "county_name": "Alameda",
+            "district_code": "00000",
+            "entity_type": 5,
+            "school_code": "01",
+            "test_year": 2016
+        },
+        "model": "api.entity",
+        "pk": 2
+    }
+]
