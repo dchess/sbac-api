@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
-from api.models import Entity, Type
+from api.models import Entity, Type, Test
 
 
 class EntityModelTest(TestCase):
@@ -27,45 +27,38 @@ class EntityModelTest(TestCase):
         self.assertEqual(str(Entity._meta.verbose_name_plural), 'entities')
 
     def test_county_code_max_length(self):
-        self.entity.county_code = '0' * 3
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.county_code = '0' * 3
             self.entity.full_clean()
 
     def test_district_code_max_length(self):
-        self.entity.district_code = '0' * 6
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.district_code = '0' * 6
             self.entity.full_clean()
 
     def test_school_code_max_length(self):
-        self.entity.school_code = '0' * 8
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.school_code = '0' * 8
             self.entity.full_clean()
 
     def test_county_name_max_length(self):
-        self.entity.county_name = 'a' * 201
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.county_name = 'a' * 201
             self.entity.full_clean()
 
     def test_district_name_max_length(self):
-        self.entity.district_name = 'a' * 1001
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.district_name = 'a' * 1001
             self.entity.full_clean()
 
     def test_school_name_max_length(self):
-        self.entity.school_name = 'a' * 1001
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.school_name = 'a' * 1001
             self.entity.full_clean()
 
     def test_zipcode_max_length(self):
-        self.entity.zipcode = '1' * 13
         with self.assertRaises(ValidationError):
-            self.entity.save()
+            self.entity.zipcode = '1' * 13
             self.entity.full_clean()
 
     def test_district_name_can_be_blank(self):
@@ -112,7 +105,30 @@ class TypeModelTest(TestCase):
             )
 
     def test_description_max_length(self):
-        self.entity_type.description = 'a' * 31
         with self.assertRaises(ValidationError):
-            self.entity_type.save()
+            self.entity_type.description = 'a' * 31
             self.entity_type.full_clean()
+
+
+class TestModelTest(TestCase):
+
+    def setUp(self):
+        self.test = Test.objects.create(
+            test_id=1,
+            name='SB - English Language Arts/Literacy'
+        )
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.test), 'SB - English Language Arts/Literacy')
+
+    def test_test_id_must_be_unique(self):
+        with self.assertRaises(IntegrityError):
+            duplicate = Test.objects.create(
+                test_id=1,
+                name='Duplicate ELA Test'
+            )
+
+    def test_name_max_length(self):
+        with self.assertRaises(ValidationError):
+            self.test.name = 'a' * 51
+            self.test.full_clean()
