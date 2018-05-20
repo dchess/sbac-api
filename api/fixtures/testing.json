@@ -26,11 +26,11 @@
     },
     {
         "fields": {
-            "county_code": "0000000",
+            "county_code": "00",
             "county_name": "State of California",
             "district_code": "00000",
             "entity_type": 4,
-            "school_code": "00",
+            "school_code": "0000000",
             "test_year": 2016
         },
         "model": "api.entity",
@@ -38,11 +38,11 @@
     },
     {
         "fields": {
-            "county_code": "0000000",
+            "county_code": "01",
             "county_name": "Alameda",
             "district_code": "00000",
             "entity_type": 5,
-            "school_code": "01",
+            "school_code": "0000000",
             "test_year": 2016
         },
         "model": "api.entity",
