@@ -36,3 +36,11 @@ class Type(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class Test(models.Model):
+    test_id = models.IntegerField(unique=True)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
