@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
-from api.models import Entity, Type, Test, Grade
+from api.models import Entity, Type, Test, Grade, SubGroup
 
 
 class EntityModelTest(TestCase):
@@ -154,3 +154,27 @@ class GradeModelTest(TestCase):
         with self.assertRaises(ValidationError):
             self.grade.description = 'a' * 11
             self.grade.full_clean()
+
+
+class SubGroupModelTest(TestCase):
+
+    def setUp(self):
+        self.subgroup = SubGroup.objects.create(
+            subgroup_id = 999,
+            description = "Test SubGroup"
+        )
+
+    def test_string_representation(self):
+        self.assertEqual(str(self.subgroup), 'Test SubGroup')
+
+    def test_subgroup_id_must_be_unique(self):
+        with self.assertRaises(IntegrityError):
+            duplicate = SubGroup.objects.create(
+                subgroup_id=999,
+                description="Fake SubGroup"
+            )
+
+    def test_description_max_length(self):
+        with self.assertRaises(ValidationError):
+            self.subgroup.description = 'a' * 101
+            self.subgroup.full_clean()

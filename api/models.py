@@ -52,3 +52,11 @@ class Grade(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class SubGroup(models.Model):
+    subgroup_id = models.IntegerField(unique=True)
+    description = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.description
