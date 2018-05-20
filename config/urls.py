@@ -23,6 +23,7 @@ router = routers.DefaultRouter()
 router.register('entities', api.views.EntityViewSet)
 router.register('types', api.views.TypeViewSet)
 router.register('tests', api.views.TestViewSet)
+router.register('grades', api.views.GradeViewSet)
 
 urlpatterns = [
     url('api/', include(router.urls)),

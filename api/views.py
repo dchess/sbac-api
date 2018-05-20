@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, permissions
 from django_filters.rest_framework import DjangoFilterBackend
-from api.models import Entity, Type, Test
-from api.serializers import EntitySerializer, TypeSerializer, TestSerializer
+from api.models import Entity, Type, Test, Grade
+from api.serializers import EntitySerializer, TypeSerializer, TestSerializer, GradeSerializer
 
 
 class TypeViewSet(viewsets.ModelViewSet):
@@ -29,4 +29,10 @@ class EntityViewSet(viewsets.ModelViewSet):
 class TestViewSet(viewsets.ModelViewSet):
     queryset = Test.objects.all()
     serializer_class = TestSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+class GradeViewSet(viewsets.ModelViewSet):
+    queryset = Grade.objects.all()
+    serializer_class = GradeSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

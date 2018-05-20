@@ -1,31 +1,26 @@
 from rest_framework import serializers
-from api.models import Entity, Type, Test
+from api.models import Entity, Type, Test, Grade
 
 
 class TypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Type
-        fields = ('url', 'type_id', 'description')
+        fields = '__all__'
 
 
 class EntitySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Entity
-        fields = (
-            'url',
-            'county_code',
-            'district_code',
-            'school_code',
-            'test_year',
-            'entity_type',
-            'county_name',
-            'district_name',
-            'school_name',
-            'zipcode'
-        )
+        fields = '__all__'
 
 
 class TestSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Test
-        fields = ('url', 'test_id', 'name')
+        fields = '__all__'
+
+
+class GradeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Grade
+        fields = '__all__'

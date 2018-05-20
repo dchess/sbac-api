@@ -63,5 +63,21 @@
         },
         "model": "api.test",
         "pk": 2
+    },
+    {
+        "fields": {
+            "description": "3rd Grade",
+            "num": "03"
+        },
+        "model": "api.grade",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "All Grades",
+            "num": "13"
+        },
+        "model": "api.grade",
+        "pk": 2
     }
 ]
