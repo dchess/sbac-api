@@ -1,8 +1,8 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
 from django.contrib.auth.models import User
-from api.views import TypeViewSet, EntityViewSet
-from api.models import Type, Entity
+from api.views import TypeViewSet, EntityViewSet, TestViewSet
+from api.models import Type, Entity, Test
 
 
 class TypeViewSetTest(TestCase):
@@ -180,7 +180,6 @@ class EntityViewSetTest(TestCase):
         new_county_name = Entity.objects.all().first().county_name
         self.assertNotEqual(original_county_name, new_county_name)
 
-
     def test_unauthorized_cannot_delete(self):
         original_count = self.entities.count()
         response = self.client.delete('/api/entities/{}/'.format(self.entity.id))
@@ -194,4 +193,83 @@ class EntityViewSetTest(TestCase):
         response = self.client.delete('/api/entities/{}/'.format(self.entity.id))
         self.assertEqual(response.status_code, 204)
         new_count = Entity.objects.all().count()
+        self.assertEqual(original_count - 1, new_count)
+
+
+class TestViewSetTest(TestCase):
+    fixtures = ['testing']
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.get(username='some_user')
+        self.tests = Test.objects.all()
+        self.test = self.tests.first()
+
+    def test_get_returns_all(self):
+        response = self.client.get('/api/tests/')
+        self.assertEqual(response.status_code, 200)
+        results = response.json()['results']
+        self.assertEqual(len(results), self.tests.count())
+
+    def test_get_returns_specified(self):
+        response = self.client.get('/api/tests/{}/'.format(self.test.id))
+        self.assertEqual(response.status_code, 200)
+        results = response.json()
+        self.assertEqual(results['name'], self.test.name)
+
+    def test_unauthorized_cannot_post(self):
+        original_count = self.tests.count()
+        response = self.client.post(
+            '/api/tests/',
+            {'test_id': '99', 'name': 'Fake Test'}
+        )
+        self.assertEqual(response.status_code, 401)
+        new_count = Test.objects.all().count()
+        self.assertEqual(original_count, new_count)
+
+    def test_authorized_can_post(self):
+        self.client.force_authenticate(user=self.user)
+        original_count = self.tests.count()
+        response = self.client.post(
+            '/api/tests/',
+            {'test_id': '99', 'name': 'Fake Test'}
+        )
+        self.assertEqual(response.status_code, 201)
+        new_count = Test.objects.all().count()
+        self.assertEqual(original_count + 1, new_count)
+
+    def test_unauthorized_cannot_update(self):
+        original_name = self.test.name
+        response = self.client.put(
+            '/api/tests/{}/'.format(self.test.id),
+            {'test_id': self.test.test_id, 'name': 'Fake Test'}
+        )
+        self.assertEqual(response.status_code, 401)
+        new_name = Test.objects.all().first().name
+        self.assertEqual(original_name, new_name)
+
+    def test_authorized_can_update(self):
+        self.client.force_authenticate(user=self.user)
+        original_name = self.test.name
+        response = self.client.put(
+            '/api/tests/{}/'.format(self.test.id),
+            {'test_id': self.test.test_id, 'name': 'Fake Test'}
+        )
+        self.assertEqual(response.status_code, 200)
+        new_name = Test.objects.all().first().name
+        self.assertNotEqual(original_name, new_name)
+
+    def test_unauthorized_cannot_delete(self):
+        original_count = self.tests.count()
+        response = self.client.delete('/api/tests/{}/'.format(self.test.id))
+        self.assertEqual(response.status_code, 401)
+        new_count = Test.objects.all().count()
+        self.assertEqual(original_count, new_count)
+
+    def test_authorized_can_delete(self):
+        self.client.force_authenticate(user=self.user)
+        original_count = self.tests.count()
+        response = self.client.delete('/api/tests/{}/'.format(self.test.id))
+        self.assertEqual(response.status_code, 204)
+        new_count = Test.objects.all().count()
         self.assertEqual(original_count - 1, new_count)

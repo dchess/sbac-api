@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Entity, Type
+from api.models import Entity, Type, Test
 
 
 class TypeSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,3 +24,8 @@ class EntitySerializer(serializers.HyperlinkedModelSerializer):
             'zipcode'
         )
 
+
+class TestSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Test
+        fields = ('url', 'test_id', 'name')

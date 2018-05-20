@@ -47,5 +47,21 @@
         },
         "model": "api.entity",
         "pk": 2
+    },
+    {
+        "fields": {
+            "name": "SB ELA",
+            "test_id": 1
+        },
+        "model": "api.test",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "SB Math",
+            "test_id": 2
+        },
+        "model": "api.test",
+        "pk": 2
     }
 ]
