@@ -13,6 +13,10 @@ class TypeViewSetTest(TestCase):
         self.types = Type.objects.all()
         self.type = self.types.first()
         self.user = User.objects.get(username='some_user')
+        self.new_type = Type.objects.create(
+            type_id=99,
+            description="Test Type"
+        )
 
     def test_get_returns_all(self):
         response = self.client.get('/api/types/')
@@ -20,7 +24,7 @@ class TypeViewSetTest(TestCase):
         results = response.json()['results']
         self.assertEqual(len(results), self.types.count())
 
-    def test_get_returns_specified_type(self):
+    def test_get_returns_specified(self):
         response = self.client.get('/api/types/{}/'.format(self.type.id))
         self.assertEqual(response.status_code, 200)
         results = response.json()
@@ -79,7 +83,115 @@ class TypeViewSetTest(TestCase):
     def test_authorized_can_delete(self):
         self.client.force_authenticate(user=self.user)
         original_count = self.types.count()
-        response = self.client.delete('/api/types/{}/'.format(self.type.id))
+        response = self.client.delete('/api/types/{}/'.format(self.new_type.id))
         self.assertEqual(response.status_code, 204)
         new_count = Type.objects.all().count()
+        self.assertEqual(original_count - 1, new_count)
+
+
+class EntityViewSetTest(TestCase):
+    fixtures = ['testing']
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.get(username='some_user')
+        self.entities = Entity.objects.all()
+        self.entity = self.entities.first()
+
+    def test_get_returns_all(self):
+        response = self.client.get('/api/entities/')
+        self.assertEqual(response.status_code, 200)
+        results = response.json()['results']
+        self.assertEqual(len(results), self.entities.count())
+
+    def test_get_returns_specified(self):
+        response = self.client.get('/api/entities/{}/'.format(self.entity.id))
+        self.assertEqual(response.status_code, 200)
+        results = response.json()
+        self.assertEqual(results['county_name'], self.entity.county_name)
+
+    def test_unauthorized_cannot_post(self):
+        original_count = self.entities.count()
+        response = self.client.post(
+            '/api/entities/',
+            {
+                'county_code': '99',
+                'district_code': '99999',
+                'school_code': '9999999',
+                'test_year': 2016,
+                'entity_type': 5,
+                'county_name': 'Test County'
+            }
+        )
+        self.assertEqual(response.status_code, 401)
+        new_count = Entity.objects.all().count()
+        self.assertEqual(original_count, new_count)
+
+    def test_authorized_can_post(self):
+        self.client.force_authenticate(user=self.user)
+        original_count = self.entities.count()
+        response = self.client.post(
+            '/api/entities/',
+            {
+                'county_code': '99',
+                'district_code': '99999',
+                'school_code': '9999999',
+                'test_year': 2016,
+                'entity_type': 5,
+                'county_name': 'Test County'
+            }
+        )
+        self.assertEqual(response.status_code, 201)
+        new_count = Entity.objects.all().count()
+        self.assertEqual(original_count + 1, new_count)
+
+    def test_unauthorized_cannot_update(self):
+        original_county_name = self.entity.county_name
+        response = self.client.put(
+            '/api/entities/{}/'.format(self.entity.id),
+            {
+                'county_code': '99',
+                'district_code': '99999',
+                'school_code': '9999999',
+                'test_year': 2016,
+                'entity_type': 5,
+                'county_name': 'New Test County'
+            }
+        )
+        self.assertEqual(response.status_code, 401)
+        new_county_name = Entity.objects.all().first().county_name
+        self.assertEqual(original_county_name, new_county_name)
+
+    def test_authorized_can_update(self):
+        self.client.force_authenticate(user=self.user)
+        original_county_name = self.entity.county_name
+        response = self.client.put(
+            '/api/entities/{}/'.format(self.entity.id),
+            {
+                'county_code': '99',
+                'district_code': '99999',
+                'school_code': '9999999',
+                'test_year': 2016,
+                'entity_type': 5,
+                'county_name': 'Test County'
+            }
+        )
+        self.assertEqual(response.status_code, 200)
+        new_county_name = Entity.objects.all().first().county_name
+        self.assertNotEqual(original_county_name, new_county_name)
+
+
+    def test_unauthorized_cannot_delete(self):
+        original_count = self.entities.count()
+        response = self.client.delete('/api/entities/{}/'.format(self.entity.id))
+        self.assertEqual(response.status_code, 401)
+        new_count = Entity.objects.all().count()
+        self.assertEqual(original_count, new_count)
+
+    def test_authorized_can_delete(self):
+        self.client.force_authenticate(user=self.user)
+        original_count = self.entities.count()
+        response = self.client.delete('/api/entities/{}/'.format(self.entity.id))
+        self.assertEqual(response.status_code, 204)
+        new_count = Entity.objects.all().count()
         self.assertEqual(original_count - 1, new_count)

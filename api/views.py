@@ -13,6 +13,7 @@ class TypeViewSet(viewsets.ModelViewSet):
 class EntityViewSet(viewsets.ModelViewSet):
     queryset = Entity.objects.all()
     serializer_class = EntitySerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filter_fields = (
         'county_code',
