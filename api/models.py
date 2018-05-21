@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 
 
 class Entity(models.Model):
@@ -57,6 +58,12 @@ class Grade(models.Model):
 class SubGroup(models.Model):
     subgroup_id = models.IntegerField(unique=True)
     description = models.CharField(max_length=100)
+    category = models.CharField(max_length=50)
 
     def __str__(self):
         return self.description
+
+
+class SubGroupAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'category')
+    list_filter = ('category',)
