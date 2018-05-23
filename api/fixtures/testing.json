@@ -26,11 +26,11 @@
     },
     {
         "fields": {
-            "county_code": "0000000",
+            "county_code": "00",
             "county_name": "State of California",
             "district_code": "00000",
             "entity_type": 4,
-            "school_code": "00",
+            "school_code": "0000000",
             "test_year": 2016
         },
         "model": "api.entity",
@@ -38,14 +38,70 @@
     },
     {
         "fields": {
-            "county_code": "0000000",
+            "county_code": "01",
             "county_name": "Alameda",
             "district_code": "00000",
             "entity_type": 5,
-            "school_code": "01",
+            "school_code": "0000000",
             "test_year": 2016
         },
         "model": "api.entity",
         "pk": 2
+    },
+    {
+        "fields": {
+            "name": "SB ELA",
+            "test_id": 1
+        },
+        "model": "api.test",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "SB Math",
+            "test_id": 2
+        },
+        "model": "api.test",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "description": "3rd Grade",
+            "num": "03"
+        },
+        "model": "api.grade",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "All Grades",
+            "num": "13"
+        },
+        "model": "api.grade",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "description": "All Students",
+            "subgroup_id": 1
+        },
+        "model": "api.subgroup",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "description": "Males",
+            "subgroup_id": 3
+        },
+        "model": "api.subgroup",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "description": "Females",
+            "subgroup_id": 4
+        },
+        "model": "api.subgroup",
+        "pk": 3
     }
 ]
