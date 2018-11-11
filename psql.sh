@@ -9,11 +9,11 @@ set -u
 user=$(whoami)
 
 # Install Postgres 10
-sudo sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' >> /etc/apt/sources.list.d/pgdg.list"
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-sudo apt-get update
-sudo apt-get install -y postgresql-common
-sudo apt-get install -y postgresql-10 postgresql-contrib libpq-dev
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" > /etc/apt/sources.list.d/PostgreSQL.list'
+sudo apt update
+sudo apt install -y postgresql-common
+sudo apt install -y postgresql-10 postgresql-contrib libpq-dev
 
 # Create superuser account as self for local management
 sudo -u postgres createuser $user -s
